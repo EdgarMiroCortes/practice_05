@@ -1,0 +1,2 @@
+compile:
+g++ main.c bigint.c
