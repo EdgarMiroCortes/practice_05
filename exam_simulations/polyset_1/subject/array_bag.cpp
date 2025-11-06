@@ -68,7 +68,7 @@ void array_bag::print() const {
 	for (int i = 0; i < size; i++) {
 		std::cout << data[i] << " ";
 	}
-	std::cout << "Albertooo" <<std::endl;
+	std::cout << std::endl;
 }
 
 void array_bag::clear() {
