@@ -173,6 +173,7 @@ void free_map(Map *map) {
     free(map);
 }
 
+// 2. Funcion principal bsq
 void process_file(char *filename) {
     Map *map = read_map(filename);
     if (!map || !validate_map(map)) {
@@ -186,6 +187,7 @@ void process_file(char *filename) {
     free_map(map);
 }
 
+// 1. Miramos si hay un archivo o si no, leemos de stdin
 int main(int argc, char **argv) {
     if (argc == 1) {
         process_file(NULL);  // stdin

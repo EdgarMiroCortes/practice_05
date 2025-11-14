@@ -70,12 +70,14 @@ int main(int ac, char **av)
 						}
 					}
 				}
+				// 6. Comprobamos si la celula esta viva o muerta
 				if(n_alive == 3 || (grid[y][x] == '0' && n_alive == 2))
 					new_grid[y][x] = '0';
 				else
 					new_grid[y][x] = ' ';
 			}
 		}
+		// 7. Copiamos la grid nueva a la grid actual
 		h = 0;
 		w = 0;
 		while(h < height){
@@ -88,6 +90,7 @@ int main(int ac, char **av)
 		}
 	}
 
+	// 8. Imprimimos la grid final
 	h = 0;
 	w = 0;
 	while(h < height){
