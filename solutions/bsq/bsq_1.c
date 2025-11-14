@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+// 1. Struct: size, characters, and map
 typedef struct {
     int lines, width;
     char empty, obstacle, full;
     char **map;
 } Map;
 
-int min3(int a, int b, int c) {
-    return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
-}
-
+// 2. Read map: Important things:
+    // If we have filename, open. Else, stdin.
+    // Scanf must be 4. If it's not 4, free, close, and null.
+    // Remove \n
 Map* read_map(char *filename) {
     FILE *file = filename ? fopen(filename, "r") : stdin;
     if (!file) return NULL;
@@ -53,6 +54,10 @@ Map* read_map(char *filename) {
     return map;
 }
 
+// 3. Validate: Boolean. Success: 1. Error: 0.
+    // Checks if it haves content
+    // Checks characters repeated
+    // Checks character by caracter. It can only be empty or obstacle
 int validate_map(Map *map) {
     if (!map || map->lines <= 0 || map->width <= 0) return 0;
     if (map->empty == map->obstacle || map->empty == map->full || map->obstacle == map->full) return 0;
@@ -66,57 +71,16 @@ int validate_map(Map *map) {
     return 1;
 }
 
-void solve_bsq(Map *map) {
-    // Create DP table
-    int **dp = malloc(map->lines * sizeof(int*));
-    for (int i = 0; i < map->lines; i++) {
-        dp[i] = calloc(map->width, sizeof(int));
-    }
-    
-    int max_size = 0, best_i = 0, best_j = 0;
-    
-    // Fill DP table
-    for (int i = 0; i < map->lines; i++) {
-        for (int j = 0; j < map->width; j++) {
-            if (map->map[i][j] == map->obstacle) {
-                dp[i][j] = 0;
-            } else if (i == 0 || j == 0) {
-                dp[i][j] = 1;
-            } else {
-                dp[i][j] = min3(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1;
-            }
-            
-            if (dp[i][j] > max_size) {
-                max_size = dp[i][j];
-                best_i = i;
-                best_j = j;
-            }
-        }
-    }
-    
-    // Fill the square
-    int start_i = best_i - max_size + 1;
-    int start_j = best_j - max_size + 1;
-    
-    for (int i = start_i; i < start_i + max_size; i++) {
-        for (int j = start_j; j < start_j + max_size; j++) {
-            map->map[i][j] = map->full;
-        }
-    }
-    
-    // Free DP table
-    for (int i = 0; i < map->lines; i++) {
-        free(dp[i]);
-    }
-    free(dp);
-}
+// Solve removed: i have my own algorytm
 
+// 4. Print map. Easy. Just print it
 void print_map(Map *map) {
     for (int i = 0; i < map->lines; i++) {
         printf("%s\n", map->map[i]);
     }
 }
 
+// 5. Free map: Free for every line, map box, and struct.
 void free_map(Map *map) {
     if (!map) return;
     for (int i = 0; i < map->lines; i++) {
@@ -126,6 +90,7 @@ void free_map(Map *map) {
     free(map);
 }
 
+// 6. Process: Recives a file/stdin, and manage it: it calls all functions.
 void process_file(char *filename) {
     Map *map = read_map(filename);
     if (!map || !validate_map(map)) {
@@ -134,16 +99,17 @@ void process_file(char *filename) {
         return;
     }
     
-    solve_bsq(map);
+    //solve_bsq(map);
     print_map(map);
     free_map(map);
 }
 
+// 7. Main: The if is important, bc the map can come by stdin or filename.
 int main(int argc, char **argv) {
     if (argc == 1) {
         process_file(NULL);  // Read from stdin
     } else {
-        for (int i = 1; i < argc; i++) {
+        for (int i = 1; i < argc; i++) { // Ithink it doesnt enter in the exam
             process_file(argv[i]);
         }
     }
